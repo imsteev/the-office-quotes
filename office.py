@@ -14,7 +14,7 @@ class OfficeQuotes(object):
 
         soup = BeautifulSoup(self.get_html(episode), 'html.parser')
         quote_divs = soup.find_all("div", class_="quote")
-        
+
         lines = {}
         for block in quote_divs:
             # https://stackoverflow.com/a/9942822/8109239
@@ -22,15 +22,21 @@ class OfficeQuotes(object):
             for line in text.split("\n"):
                 if ":" not in line: continue
                 character, words = line.split(":")[0].lower(), line.split(":")[1]
-                if character not in lines:
-                    lines[character] = []
+
+                # fix typos
+                if character == "michel": character = "michael"
+
                 # encoding corrections
                 words = words.replace("\xe2\x80\x94", "-")
                 words = words.replace("\xe2\x80\x99", "'")
                 words = words.replace("\xe2\x80\x98", "'")
                 words = words.replace("\'", "'")
+                words = words.strip()
 
-                lines[character].append(words.strip())
+                if character not in lines:
+                    lines[character] = []
+                # TODO: split lines by individual sentences
+                if len(words) > 0: lines[character].append(words)
 
         self.quotes[episode] = lines
         return lines

@@ -46,7 +46,7 @@ class OfficeQuotes(object):
         self.quotes[episode] = lines
         return lines
 
-    def quotes_from_character(self, episode, character):
+    def quotes_from_character(self, character, episode):
         quotes = self.quotes_from_episode(episode)
         return quotes[character]
 
